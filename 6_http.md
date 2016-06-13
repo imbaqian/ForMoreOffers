@@ -204,3 +204,15 @@ cookie会被浏览器自动删除，通常存在以下几个原因：
 使用cookie缺点：
   * 不良站点用cookie搜集用户隐私信息
   * cookie窃取：黑客可以通过窃取用户的cookie来模拟用户的请求行为。（跨站脚本攻击XSS）
+  
+##Session 机制
+  
+Session机制是一种服务器端的机制，服务器使用一种类似于散列表的结构（也可能就是散列表）来保存信息。当程序需要为某个客户的请求创建一个session时候，服务器首先检查这个客户端的请求里是否已包含了一个session标识（session ID）：
+  
+  - 如果已包含一个session ID 则说明以前已经为次客户端创建过session，服务器就按照session ID 把这个 Session 检索出来使用（如果检索不到，就新建一个）。
+  - 如果客户请求不包含 session ID，则为此客户创建一个session，并且生成一个与此session相关联的session ID，session ID的值应该是一个既不会重复，又不容易被找到规律以仿造的字符串，这个session ID将被在本次响应中返回给客户端保存。
+  
+的具体实现方式：
+ 
+  - Cookie方式：服务器给每个Session分配一个唯一的JSESSIONID，并通过Cookie发送给客户端。当客户端发起新的请求的时候，将在Cookie头中携带这个JSESSIONID，这样服务器能够找到这个客户端对应的Session。
+  - URL回写：服务器在发送给浏览器页面的所有链接中都携带JSESSIONID的参数，这样客户端点击任何一个链接都会把JSESSIONID带回服务器。如果直接在浏览器输入服务端资源的url来请求该资源，那么Session是匹配不到的。
